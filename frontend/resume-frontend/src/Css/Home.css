@@ -1,0 +1,12 @@
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+strong {
+    color: #007bff;
+    /* blue bold */
+}

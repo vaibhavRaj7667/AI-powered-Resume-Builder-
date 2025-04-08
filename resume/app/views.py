@@ -9,7 +9,7 @@ from .serializers import ResumeSerializer, ResumeAnalysisSerializer
 import re
 from .ai_services import ResumeAnalyzer
 import json
-
+from rest_framework.views import APIView
 analyzer = ResumeAnalyzer()
 
 
@@ -34,6 +34,17 @@ class cleanData:
         text = ''.join(lines)
 
         return text
+    
+class optimize(APIView):
+    def get(self, request):
+        name = request.user
+
+        Data = ResumeAnalysis.objects.filter(resume__user = name).last()
+
+        bro = ResumeAnalysisSerializer(Data)
+        
+        return Response(bro.data,status=status.HTTP_200_OK)
+
 
 
 @api_view(['POST'])

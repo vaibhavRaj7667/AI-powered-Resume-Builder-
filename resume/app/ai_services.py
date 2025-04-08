@@ -22,7 +22,8 @@ class ResumeAnalyzer:
         self.output_parser = StrOutputParser()
 
     def analyze_resume_content(self, resume_text: str, job_description: str) -> dict:
-        """Analyze resume using LangChain pipeline with Gemini"""
+        #"""Analyze resume using LangChain pipeline with Gemini"""
+
         try:
             # Extract keywords
             job_keywords = self._extract_keywords(job_description)
@@ -49,7 +50,8 @@ class ResumeAnalyzer:
             return {'status': 'error', 'message': str(e)}
 
     def generate_resume(self, user_data: dict, job_description: str) -> dict:
-        """Generate resume using Gemini"""
+        #"""Generate resume using Gemini"""
+
         try:
             prompt = ChatPromptTemplate.from_template("""
             Create a professional resume for this candidate targeting the job:
@@ -81,7 +83,8 @@ class ResumeAnalyzer:
             return {'status': 'error', 'message': str(e)}
 
     def _extract_keywords(self, text: str) -> list:
-        """Extract keywords using spaCy"""
+        #"""Extract keywords using spaCy"""
+
         doc = nlp(text)
         return list(set(
             token.lemma_.lower() for token in doc
@@ -96,29 +99,36 @@ class ResumeAnalyzer:
 
 
     def _get_ai_suggestions(self, resume: str, jd: str) -> list:
-        """Get improvement suggestions using Gemini"""
+        #"""Get improvement suggestions using Gemini"""
+
         prompt = ChatPromptTemplate.from_template("""
-        Analyze this resume against the job description and provide specific, actionable suggestions:
-        
+       You are an expert resume analyst.
+
+        Compare the resume and job description below, and give concise, actionable suggestions in bullet points. Be clear and to the point — not too long, not too brief.
+
         **Resume:**
         {resume}
-        
+
         **Job Description:**
         {jd}
-        
-        Provide concise bullet points focusing on:
-        - Top 5 missing keywords to include
-        - 3 weakest phrases to improve (suggest stronger alternatives)
-        - Ways to add quantifiable metrics (suggest specific numbers)
-        - Structural improvements (section ordering, headings)
-        - ATS optimization tips
+
+        Focus on these areas:
+        - Top 5 important keywords missing from the resume
+        - 3 weak or vague phrases (suggest better alternatives)
+        - Where to add numbers or measurable achievements
+        - Any structural improvements (headings or section order)
+        - ATS (Applicant Tracking System) optimization tips
+
         """)
+        
         
         chain = prompt | self.llm | self.output_parser
         return chain.invoke({"resume": resume, "jd": jd}).split("\n")
 
     def _optimize_resume(self, resume: str, jd: str) -> str:
-        """Generate optimized resume version with tracked changes"""
+        #"""Generate optimized resume version with tracked changes"""
+
+
         prompt = ChatPromptTemplate.from_template("""
         Optimize this resume for the job description with tracked changes:
         
@@ -137,6 +147,8 @@ class ResumeAnalyzer:
         - Professional summary at top
         - Clear section headings
         """)
+
+
         
         chain = prompt | self.llm | self.output_parser
         return chain.invoke({"resume": resume, "jd": jd})
