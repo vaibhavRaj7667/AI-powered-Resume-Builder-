@@ -6,11 +6,35 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Resume, ResumeAnalysis
 from .serializers import ResumeSerializer, ResumeAnalysisSerializer
-
+import re
 from .ai_services import ResumeAnalyzer
 import json
 
 analyzer = ResumeAnalyzer()
+
+
+class cleanData:
+    def __init__(self, text):
+        self.text = text
+
+    def clean(self):
+    
+        text = re.sub(r'[-•]+', '-', self.text)
+
+        # Remove duplicate spaces and lines
+        text = re.sub(r'\n\s*\n', '\n', text)  # Remove multiple blank lines
+        text = re.sub(r'\s{2,}', ' ', text)  # Replace multiple spaces with single space
+        text = re.sub(r'\n+', '\n', text)  # Collapse multiple newlines into one
+
+        # Remove stray punctuation except for normal formatting (colons, commas, etc.)
+        text = re.sub(r'[^\w\s:|.,/@()-]', '', text)
+
+        # Strip leading/trailing whitespace from each line
+        lines = [line.strip() for line in text.split('\n') if line.strip()]
+        text = ''.join(lines)
+
+        return text
+
 
 @api_view(['POST'])
 def analyze_resume(request):
@@ -18,18 +42,23 @@ def analyze_resume(request):
     resume_text = request.data.get('resume_text', '')
     job_description = request.data.get('job_description', '')
     
+    
+
     if not resume_text or not job_description:
         return Response(
             {'error': 'Resume text and job description are required'},
             status=status.HTTP_400_BAD_REQUEST
         )
     
+    raw_resume = cleanData(resume_text).clean()
+    cleaned_job_description = cleanData(job_description).clean()
+
     # Save to database
     resume = Resume.objects.create(
         user=request.user,
         title=f"Resume {Resume.objects.filter(user=request.user).count() + 1}",
-        raw_content=resume_text,
-        job_description=job_description
+        raw_content=raw_resume,
+        job_description=cleaned_job_description
     )
     
     # Perform AI analysis

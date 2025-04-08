@@ -4,6 +4,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from django.conf import settings
 import spacy
+import json
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -15,7 +16,8 @@ class ResumeAnalyzer:
         self.llm = ChatGoogleGenerativeAI(
             model="gemini-1.5-pro-latest",
             temperature=0.7,
-            google_api_key=settings.GOOGLE_API_KEY
+            google_api_key=settings.GOOGLE_API_KEY,
+           
         )
         self.output_parser = StrOutputParser()
 
@@ -33,13 +35,13 @@ class ResumeAnalyzer:
             suggestions = self._get_ai_suggestions(resume_text, job_description)
             
             # Optimize resume
-            optimized_content = self._optimize_resume(resume_text, job_description)
+            # optimized_content = self._optimize_resume(resume_text, job_description)
             
             return {
                 'missing_keywords': list(set(job_keywords) - set(resume_keywords)),
                 'suggested_improvements': suggestions,
                 'ats_score': round(ats_score * 100, 2),
-                'optimized_content': optimized_content,
+                # 'optimized_content': optimized_content,
                 'status': 'success'
             }
             
@@ -91,6 +93,7 @@ class ResumeAnalyzer:
         vectorizer = TfidfVectorizer()
         tfidf_matrix = vectorizer.fit_transform([resume, jd])
         return cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0]
+
 
     def _get_ai_suggestions(self, resume: str, jd: str) -> list:
         """Get improvement suggestions using Gemini"""
