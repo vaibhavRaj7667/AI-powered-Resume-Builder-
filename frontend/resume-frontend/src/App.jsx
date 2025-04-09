@@ -5,6 +5,7 @@ import './App.css'
 import Home from './components/Home'
 import Login from './components/Login'
 import Resume_analyzer from './components/Resume_analyzer'
+import Resume_generate from './components/Resume_generate'
 import { Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path='/analyze' element={<Resume_analyzer/>}/>
+        <Route path='/generate' element={<Resume_generate/>}></Route>
         
       </Routes>
 
