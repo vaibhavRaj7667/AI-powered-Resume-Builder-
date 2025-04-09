@@ -1,14 +1,27 @@
-import React, { useState } from 'react'
+import React, { use, useState } from 'react'
 import axios from 'axios'
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import '../Css/analyzer.css'
+import Button from '@mui/material/Button';
+import { LoadingButton } from '@mui/lab';
+import CircularProgress from '@mui/material/CircularProgress';
+
+
+
 
 const Resume_analyzer = () => {
 
     const [resumeData, setResumeData] = useState({ resume_text: '', job_description: '' })
     const [data, setData] = useState(null)
+    const [Loading, setLoading] = useState(false)
 
     const handleSubmit = async (e) => {
         e.preventDefault(); 
         try {
+            
+            setLoading(true)
+
             const response = await axios.post(
                 "http://127.0.0.1:8000/analyze/",
                 {
@@ -24,15 +37,25 @@ const Resume_analyzer = () => {
             );
 
             setData(response.data); 
+
+            
+
         } catch (error) {
             console.error(error);
+        } finally{
+            setLoading(false)
         }
     };
 
     return (
         <div className="space">
+            <h1>Resume Analysis</h1>
+            <p>Upload your resume and a job description to get an analysis of how well your resume matches the job requirements.</p>
+
             <form onSubmit={handleSubmit}>
+                <div className='forms'>
                 <div className="resumeText">
+                    <p>Resume Content</p>
                     <textarea
                         id="resume"
                         placeholder="Paste your resume content here"
@@ -42,36 +65,67 @@ const Resume_analyzer = () => {
                 </div>
 
                 <div className="jobDiscription">
+                    <p>Job Description</p>
                     <textarea
                         value={resumeData.job_description}
                         onChange={(e) => setResumeData({ ...resumeData, job_description: e.target.value })}
                     />
                 </div>
+                </div>
 
-                <button type="submit">Submit</button>
+                {Loading ? (
+                    <Button 
+                        style={{backgroundColor:'gray', color:'white'}}
+                        variant="contained"
+                        fullWidth
+                        disabled
+                    >
+                        <CircularProgress color="inherit" size={20} />
+                    </Button>
+                    ) : (
+                    <Button 
+                        style={{backgroundColor:'gray', color:'white'}}
+                        variant="contained"
+                        fullWidth
+                        type='submit'
+                        onClick={handleSubmit}
+                    >
+                        Submit
+                    </Button>
+                    )}
             </form>
 
+            
             <div className="result">
                 {data && (
+                    
                     <div>
                         <h3>ATS Score: {data.analysis.ats_score}</h3>
-                        <div>
-                            <h4>Missing Keywords:</h4>
-                            <ul>
-                                {data.analysis.missing_keywords.map((keyword, key) => (
-                                    <li key={key}>{keyword}</li>
-                                ))}
-                            </ul>
-                        </div>
+                        <Card sx={{ maxWidth: 345 }}>
+                            <CardContent>
+                                <div>
+                                    <h4>Missing Keywords:</h4>
+                                    <ul>
+                                        {data.analysis.missing_keywords.map((keyword, key) => (
+                                            <li key={key}>{keyword}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </CardContent>
+                        </Card>
 
-                        <div>
-                            <h4>Suggested Improvements:</h4>
-                            <ul>
-                                {data.analysis.suggested_improvements.map((suggestion, key) => (
-                                    <li key={key}>{suggestion}</li>
-                                ))}
-                            </ul>
-                        </div>
+                        <Card sx={{ maxWidth: 345 }}>
+                            <CardContent>
+                                <div>
+                                    <h4>Suggested Improvements:</h4>
+                                    <ul>
+                                        {data.analysis.suggested_improvements.map((suggestion, key) => (
+                                            <li key={key}>{suggestion}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </div>
                 )}
             </div>

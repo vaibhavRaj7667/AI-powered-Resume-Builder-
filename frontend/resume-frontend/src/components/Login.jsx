@@ -20,8 +20,15 @@ const Login = () => {
             localStorage.setItem("refresh_token", response.data.refresh)
             console.log("Login successful:", response.data);
             setcredentials({username:'',password:''})
-    
-            navigate('/home')
+            
+            if(localStorage.getItem("access_token")){
+              navigate('/home')
+            }
+            else{
+              console.log("login view not working")
+            }
+
+            
         } catch (error) {
             console.log(error)
             

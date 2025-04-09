@@ -15,7 +15,7 @@ class ResumeAnalyzer:
         # Initialize Gemini LLM
         self.llm = ChatGoogleGenerativeAI(
             model="gemini-1.5-pro-latest",
-            temperature=0.7,
+            temperature=0,
             google_api_key=settings.GOOGLE_API_KEY,
            
         )
@@ -104,20 +104,15 @@ class ResumeAnalyzer:
         prompt = ChatPromptTemplate.from_template("""
        You are an expert resume analyst.
 
-        Compare the resume and job description below, and give concise, actionable suggestions in bullet points. Be clear and to the point — not too long, not too brief.
+        Compare the resume and job description below, and provide only the **top 5 most important** suggestions to improve the resume.
+
+        Be concise, clear, and actionable. Format the output as bullet points.
 
         **Resume:**
         {resume}
 
         **Job Description:**
         {jd}
-
-        Focus on these areas:
-        - Top 5 important keywords missing from the resume
-        - 3 weak or vague phrases (suggest better alternatives)
-        - Where to add numbers or measurable achievements
-        - Any structural improvements (headings or section order)
-        - ATS (Applicant Tracking System) optimization tips
 
         """)
         
