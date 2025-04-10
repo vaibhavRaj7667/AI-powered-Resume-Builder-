@@ -54,21 +54,20 @@ class ResumeAnalyzer:
 
         try:
             prompt = ChatPromptTemplate.from_template("""
-            Create a professional resume for this candidate targeting the job:
+            Generate a professional, cleanly formatted resume using the following user data. 
+            Important: Do not include any extra explanation, suggestion, or comment. 
+            Output only the final resume content in clean text format.
+            If any data is missing, skip that section and proceed with the rest.
             
-            **Job Description:**
-            {job_description}
-            
-            **Candidate Information:**
+            User Data:
             {user_data}
             
-            **Requirements:**
-            - Use ATS-friendly formatting
-            - Include relevant keywords from job description
-            - Focus on achievements with quantifiable metrics
-            - Use professional tone (third person)
-            - Structure: Summary, Experience, Skills, Education
-            - Keep to 1-2 pages maximum
+            Job Description (if available):
+            {job_description}
+            
+            Format it like a real resume with clearly labeled sections. Use bullet points for Experience, 
+            Skills, and Projects. Skip any section if data is missing.
+            Output only the resume — no explanation, no extra text.
             """)
             
             chain = prompt | self.llm | self.output_parser
