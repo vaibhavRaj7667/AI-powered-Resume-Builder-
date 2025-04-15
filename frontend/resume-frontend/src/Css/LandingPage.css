@@ -1,0 +1,217 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    /* Prevent horizontal scrolling */
+}
+
+.main {
+    position: relative;
+    width: 100%;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: transparent;
+    padding: 1rem;
+    /* backdrop-filter: blur(5px); */
+    /* background-color: rgba(255, 255, 255, 0.1); */
+    position: relative;
+
+    z-index: 10;
+
+}
+
+.core {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative;
+    /* Create positioning context */
+    z-index: 1;
+    /* Lower than navbar */
+    margin-top: -60px;
+    /* Pull up to overlap with navbar */
+}
+
+.leftdiv {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 200px;
+    z-index: 5;
+    flex: 1;
+    font-family: "Matemasie", sans-serif;
+}
+
+.leftdivchild h1 {
+    font-size: 4.1rem;
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+
+.custom {
+    margin-top: -80px;
+    margin-left: 160px;
+}
+
+.leftdivchild {
+    margin-left: 6.3rem;
+}
+
+
+.rightdiv {
+    position: relative;
+    flex: 1;
+    z-index: 1;
+}
+
+.bro {
+    display: flex;
+    justify-content: flex-end;
+    overflow: visible;
+    align-items: flex-start;
+    height: 800px;
+}
+
+.lol {
+    width: 850px;
+    height: 830px;
+    background-color: #aca6eb;
+    border-radius: 50% 20% 50% 40% / 20% 50% 50% 40%;
+    transform: rotate(15deg) translate(70px, -120px);
+    overflow: hidden;
+    position: relative;
+}
+
+.pinks {
+    position: absolute;
+    height: 500px;
+    transform: rotate(-22deg) translate(-100px, -300px);
+    width: 940px;
+    background-color: #FED2E2;
+    z-index: 0;
+}
+
+.blue {
+    position: absolute;
+    height: 200px;
+    width: 300px;
+    background-color: #5D3FD3;
+    bottom: 40px;
+    left: 50%;
+    border-radius: 90% 70% 30% 40% / 50% 50% 80% 90%;
+    transform: translateX(-60%) rotate(-15deg) translate(20px, 170px);
+    z-index: 2;
+}
+
+.resume {
+    margin-top: 250px;
+    margin-left: 200px;
+    height: 400px;
+    rotate: -15deg;
+    filter: drop-shadow(5px 3px 5px #797878);
+}
+
+button {
+    border: none;
+    background-color: transparent;
+    font-size: large;
+    cursor: pointer;
+}
+
+.leftbutton {
+    display: flex;
+    gap: 50px;
+}
+
+.rightbutton {
+    display: flex;
+    gap: 30px;
+}
+
+.signin {
+    background-color: rgb(255, 255, 255);
+    padding: 10px;
+    padding-inline: 20px;
+    border-radius: 20px;
+}
+
+.get-start {
+    background-color: #5D3FD3;
+    color: white;
+    padding: 10px;
+    padding-inline: 20px;
+    border-radius: 20px;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+    margin-bottom: 5px;
+    border-radius: 2px;
+}
+
+@media screen and (max-width: 768px) {
+    .nav {
+        flex-direction: column;
+        position: relative;
+    }
+
+    .hamburger {
+        display: flex;
+        align-self: flex-start;
+        margin: 10px;
+    }
+
+    .leftbutton,
+    .rightbutton {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 1rem 0;
+    }
+
+    .leftbutton.active,
+    .rightbutton.active {
+        display: flex;
+    }
+
+    .rightbutton {
+        margin-top: 10px;
+    }
+
+    .signin,
+    .get-start {
+        width: 80%;
+        text-align: center;
+    }
+
+    .core {
+        flex-direction: column;
+    }
+
+    .bro {
+        justify-content: center;
+        height: 500px;
+    }
+
+    .lol {
+        transform: rotate(15deg) translate(0px, -100px);
+        width: 100%;
+        max-width: 450px;
+    }
+}

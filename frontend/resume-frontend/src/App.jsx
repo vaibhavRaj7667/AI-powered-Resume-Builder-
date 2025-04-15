@@ -7,6 +7,7 @@ import Login from './components/Login'
 import Resume_analyzer from './components/Resume_analyzer'
 import Resume_generate from './components/Resume_generate'
 import Resume from './components/Resume'
+import LandingPage from './components/LandingPage'
 import { Routes, Route } from 'react-router-dom';
 
 
@@ -21,8 +22,8 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path='/analyze' element={<Resume_analyzer/>}/>
         <Route path='/generate' element={<Resume_generate/>}></Route>
-        <Route path='resume/' element={<Resume/>}/>
-        
+        <Route path='/resume' element={<Resume/>}/>
+        <Route path='/load' element={<LandingPage/>}></Route>
       </Routes>
 
    </>

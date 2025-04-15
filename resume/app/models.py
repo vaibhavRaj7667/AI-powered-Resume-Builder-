@@ -24,3 +24,5 @@ class ResumeAnalysis(models.Model):
     
     def __str__(self):
         return f"Analysis for {self.resume.title}"
+
+

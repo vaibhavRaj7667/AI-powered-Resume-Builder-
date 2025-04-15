@@ -7,15 +7,56 @@ import spacy
 import json
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from pydantic import BaseModel, Field
+from typing import List, Optional, Dict
 
 nlp = spacy.load("en_core_web_sm")
+
+class Education(BaseModel):
+    institution: str= Field(..., description="Name of the education institution")
+    degree: str = Field(...,description="Degree obtained or in progress")
+    graduation_date: str = Field(...,description="Graduation date or expected graduction date")
+    location: Optional[str]= Field(None, description="Loaction of the institution")
+    gpa: Optional[str]=Field(None, description="GPA if available")
+
+class Experience(BaseModel):
+    company: str= Field(description="company name")
+    title: str = Field(description="Job title")
+    start_date: str= Field(description="strat date of the employment")
+    end_date: Optional[str] = Field(None,description="End date of the employmet or 'present'")
+    location: Optional[str] = Field(None, description="Job location")
+    achievements: List[str] = Field(description="List of achievements and responsibilities with quantifiable results")
+
+class Project(BaseModel):
+    name: str= Field(description="project name")
+    description: str = Field(description="Brief description of the project")
+    technologies: list[str]= Field(description="Technologies used in the project")
+    link: Optional[str] = Field(None, description="github link of the project")
+    live: Optional[str]= Field(None, description="live link of the project")
+
+class Skills(BaseModel):
+    Languages: List[str] = Field(..., description="List of programming languages")
+    Frameworks: Optional[List[str]] = Field(None, description="List of frameworks")
+    Developer_Tools: Optional[List[str]] = Field(None, description="List of developer tools")
+    Libraries: Optional[List[str]] = Field(None, description="List of libraries")
+
+class Resume(BaseModel):
+    full_name: str = Field(description="Full name of the candidate")
+    contact_info: list[str]= Field(description="contact information including email, phone , link, github")  
+    summary: str = Field(description="professional summary tailored to the job")
+    skill: list[Skills] = Field(description="list of all skills have")
+    experience: Optional[list[Experience]] = Field(description="Professional experience")
+    education: list[Education] = Field(None, description="Educational background")
+    projects: list[Project] = Field(description="Relevant projects")
+    
+
 
 class ResumeAnalyzer:
     def __init__(self):
         # Initialize Gemini LLM
         self.llm = ChatGoogleGenerativeAI(
-            model="gemini-1.5-pro-latest",
-            temperature=0,
+            model="gemini-2.0-flash",
+            temperature=0.7,
             google_api_key=settings.GOOGLE_API_KEY,
            
         )
@@ -54,21 +95,30 @@ class ResumeAnalyzer:
 
         try:
             prompt = ChatPromptTemplate.from_template("""
-            Generate a professional, cleanly formatted resume using the following user data. 
-            Important: Do not include any extra explanation, suggestion, or comment. 
-            Output only the final resume content in clean text format.
-            If any data is missing, skip that section and proceed with the rest.
-            
+            ("system", "You are a professional resume writer and AI assistant specialized in creating ATS-optimized resumes"),
+           ("human", "Generate a professionally formatted, ATS-friendly resume using only the information provided in the user data and job description below.
+
+            Requirements:
+
+            Do not invent or add any skills, projects, experiences, or details that are not present in the user data.
+            Tailor and rephrase existing content to align with the job description, using relevant keywords and improving weak or generic sentences.
+            Write a concise and impactful "About Me" section (2–3 lines) that reflects the user's actual skills, achievements, and projects.
+            Use a clean, professional layout with clearly labeled sections: About Me, Experience, Projects, Skills, Education, etc.
+            Use bullet points for clarity under each section.
+            Skip any section if the user data does not contain relevant information.
+            Final output should be plain text resume only — no explanations or extra commentary.
             User Data:
             {user_data}
-            
-            Job Description (if available):
-            {job_description}
-            
-            Format it like a real resume with clearly labeled sections. Use bullet points for Experience, 
-            Skills, and Projects. Skip any section if data is missing.
-            Output only the resume — no explanation, no extra text.
+
+            Job Description:
+            {job_description}")
+
+
             """)
+
+            # chain = prompt.pipe(
+            #     self.llm.with_structured_output(Resume)
+            # )
             
             chain = prompt | self.llm | self.output_parser
             result = chain.invoke({
@@ -88,7 +138,7 @@ class ResumeAnalyzer:
         return list(set(
             token.lemma_.lower() for token in doc
             if not token.is_stop and not token.is_punct and token.is_alpha
-        ))
+        ))[:5]
 
     def _calculate_ats_score(self, resume: str, jd: str) -> float:
         """Calculate ATS compatibility score"""
@@ -101,11 +151,11 @@ class ResumeAnalyzer:
         #"""Get improvement suggestions using Gemini"""
 
         prompt = ChatPromptTemplate.from_template("""
-       You are an expert resume analyst.
+        ("system", "You are a professional resume analyst and AI assistant specialized in creating ATS-optimized resumes"),
 
-        Compare the resume and job description below, and provide only the **top 5 most important** suggestions to improve the resume.
+        ("human","Compare the resume and job description below, and provide only the **top 5 most important** suggestions to improve the resume.
 
-        Be concise, clear, and actionable. Format the output as bullet points.
+        Be concise, clear, and actionable. Format the output as bullet points.")
 
         **Resume:**
         {resume}

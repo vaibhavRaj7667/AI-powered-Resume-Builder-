@@ -12,7 +12,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 const Resume_analyzer = () => {
 
-    const [resumeData, setResumeData] = useState({ resume_text: '', job_description: '' })
+    const [resumeData, setResumeData] = useState({ pdf_file: '', job_description: '' })
     const [data, setData] = useState(null)
     const [Loading, setLoading] = useState(false)
 
@@ -22,16 +22,33 @@ const Resume_analyzer = () => {
             
             setLoading(true)
 
+            // const response = await axios.post(
+            //     "http://127.0.0.1:8000/analyze/",
+            //     {
+            //         resume_text: resumeData.resume_text,
+            //         job_description: resumeData.job_description
+            //     },
+            //     {
+            //         headers: {
+            //             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+            //             'Content-Type': 'application/json'
+            //         }
+            //     }
+            // );
+
+
+
+            const formData = new FormData();
+            formData.append('pdf_file', resumeData.pdf_file);  // now it's a File object
+            formData.append('job_description', resumeData.job_description);
+
             const response = await axios.post(
                 "http://127.0.0.1:8000/analyze/",
-                {
-                    resume_text: resumeData.resume_text,
-                    job_description: resumeData.job_description
-                },
+                formData,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'multipart/form-data'
                     }
                 }
             );
@@ -56,11 +73,10 @@ const Resume_analyzer = () => {
                 <div className='forms'>
                 <div className="resumeText">
                     <p>Resume Content</p>
-                    <textarea
-                        id="resume"
-                        placeholder="Paste your resume content here"
-                        value={resumeData.resume_text}
-                        onChange={(e) => setResumeData({ ...resumeData, resume_text: e.target.value })}
+                    <input
+                        type="file"
+                        accept="application/pdf"
+                        onChange={(e) => setResumeData({ ...resumeData, pdf_file: e.target.files[0] })}
                     />
                 </div>
 

@@ -82,7 +82,7 @@ textarea:focus {
     max-width: 100%;
 }
 
-body {
+/* body {
     background-color: #f8f9fa;
 
     background-image:
@@ -90,7 +90,7 @@ body {
         linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
     background-size: 20px 20px;
 
-}
+} */
 
 
 /* Media queries for responsiveness */

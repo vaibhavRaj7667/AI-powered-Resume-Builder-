@@ -1,16 +1,19 @@
 # resume_api/views.py
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+# from django.shortcuts import get_object_or_404
 from .models import Resume, ResumeAnalysis
 from .serializers import ResumeSerializer, ResumeAnalysisSerializer
 import re
 from .ai_services import ResumeAnalyzer
-import json
+# import json
 from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
+from pypdf import PdfReader
 analyzer = ResumeAnalyzer()
+
 
 
 class cleanData:
@@ -49,15 +52,28 @@ class optimize(APIView):
 
 @api_view(['POST'])
 def analyze_resume(request):
-    # Get resume text and job description from request
-    resume_text = request.data.get('resume_text', '')
+    
+    # resume_text = request.data.get('resume_text', '')
+    pdf_file = request.FILES.get('pdf_file', None)
     job_description = request.data.get('job_description', '')
     
     
 
-    if not resume_text or not job_description:
+    if not pdf_file or not job_description:
         return Response(
             {'error': 'Resume text and job description are required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    try:
+        # Read text from PDF
+        pdf_reader = PdfReader(pdf_file)
+        resume_text = ""
+        for page in pdf_reader.pages:
+            resume_text += page.extract_text() or ''
+    except Exception as e:
+        return Response(
+            {'error': 'Failed to read PDF file', 'details': str(e)},
             status=status.HTTP_400_BAD_REQUEST
         )
     
