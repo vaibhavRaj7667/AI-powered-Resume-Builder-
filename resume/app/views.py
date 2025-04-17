@@ -132,8 +132,8 @@ def generate_resume(request):
         optimized_content=generated_content,
         job_description=job_description
     )
-    
+    print(type(resume.optimized_content))
     return Response({
-        'resume': ResumeSerializer(resume).data,
+        'resume': resume.optimized_content,
         'generated': True
     })

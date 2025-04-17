@@ -1,0 +1,121 @@
+/* Resume.css */
+
+.resume-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #333;
+    line-height: 1.5;
+}
+
+.resume-header {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.resume-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.contact-info {
+    font-size: 14px;
+    color: #444;
+}
+
+.resume-section {
+    margin-bottom: 20px;
+}
+
+.resume-section h2 {
+    font-size: 18px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #999;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+/* Education section */
+.education-item {
+    margin-bottom: 10px;
+}
+
+.edu-header,
+.edu-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.institution,
+.degree {
+    font-weight: bold;
+}
+
+/* Experience section */
+.experience-item {
+    margin-bottom: 15px;
+}
+
+.exp-header,
+.exp-subheader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.job-title,
+.company {
+    font-weight: bold;
+}
+
+.achievements {
+    margin-top: 5px;
+    padding-left: 20px;
+}
+
+.achievements li {
+    margin-bottom: 4px;
+}
+
+/* Project section */
+.project-item {
+    margin-bottom: 15px;
+}
+
+.project-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.project-name {
+    font-weight: bold;
+}
+
+.project-details {
+    margin-top: 5px;
+    padding-left: 20px;
+}
+
+.project-details li {
+    margin-bottom: 4px;
+}
+
+/* Skills section */
+.skills-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.skill-category {
+    line-height: 1.5;
+}
+
+.skill-title {
+    font-weight: bold;
+}

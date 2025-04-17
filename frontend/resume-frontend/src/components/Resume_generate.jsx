@@ -1,7 +1,11 @@
-
-import React, { useState } from "react";
-import { Loader2, Copy, Download } from "lucide-react";
-import '../Css/generate.css'
+// Modified Resume_generate.jsx
+import React, { useState, useRef } from "react";
+import { Loader2, Copy, Download, FileDown } from "lucide-react";
+import '../Css/generate.css';
+import Resume from "./Resume";
+import { topdf } from "dom-to-pdf"
+import { jsPDF } from "jspdf"; // You'll need to install this: npm install jspdf
+import html2canvas from "html2canvas"; // You'll need to install this: npm install html2canvas
 
 export default function Resume_generate() {
   const [formData, setFormData] = useState({
@@ -17,12 +21,10 @@ export default function Resume_generate() {
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [generatedResume, setGeneratedResume] = useState(null);
+  const [resumeData, setResumeData] = useState(null);
   const [activeAccordion, setActiveAccordion] = useState("personal");
+  const resumeRef = useRef(null);
   
-  // You would typically get this from your authentication system
-
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -64,32 +66,10 @@ export default function Resume_generate() {
       // Parse JSON response
       const data = await response.json();
       
-      // Extract the optimized_content from the response format
-      if (data && data.resume && data.resume.optimized_content) {
-        try {
-          // Parse the nested JSON string in optimized_content
-          const parsedContent = JSON.parse(data.resume.optimized_content);
-          
-          // Extract the actual resume content
-          if (parsedContent && parsedContent.content) {
-            setGeneratedResume(parsedContent.content);
-          } else {
-            throw new Error('Content not found in parsed optimized_content');
-          }
-        } catch (parseError) {
-          console.error("Error parsing optimized_content:", parseError);
-          
-          // Fallback: try to extract content directly if JSON parsing fails
-          // This assumes optimized_content might be a string with escaped quotes
-          const contentMatch = data.resume.optimized_content.match(/'content': '(.+?)(?='\})/s);
-          if (contentMatch && contentMatch[1]) {
-            // Unescape the content string
-            const unescapedContent = contentMatch[1].replace(/\\'/g, "'").replace(/\\n/g, "\n");
-            setGeneratedResume(unescapedContent);
-          } else {
-            throw new Error('Could not extract content from optimized_content');
-          }
-        }
+      // Process the response data
+      if (data && data.resume && data.resume.content) {
+        // Store the formatted resume data
+        setResumeData(data.resume.content);
       } else {
         throw new Error('Invalid response format from API');
       }
@@ -115,7 +95,6 @@ export default function Resume_generate() {
         const jobTitle = lines[0] || "Position";
         const company = lines[1] || "Company";
         const duration = lines[2] || "";
-        
         
         const responsibilities = lines.slice(3).filter(line => line.trim());
         
@@ -157,22 +136,73 @@ export default function Resume_generate() {
     return projects;
   };
 
-  const copyToClipboard = () => {
-    if (generatedResume) {
-      navigator.clipboard.writeText(generatedResume);
+  const downloadAsPDF = async () => {
+    if (!resumeRef.current) return;
+    
+    try {
+      // Set some styles to ensure the full content is captured
+      const originalStyle = resumeRef.current.style.cssText;
+      resumeRef.current.style.width = '210mm'; // A4 width
+      resumeRef.current.style.margin = '0';
+      resumeRef.current.style.padding = '10mm';
+      
+      // Get the height of the element
+      const height = resumeRef.current.offsetHeight;
+      const width = resumeRef.current.offsetWidth;
+      
+      // Create canvas with the right dimensions
+      const canvas = await html2canvas(resumeRef.current, {
+        scale: 2, // Higher scale for better quality
+        useCORS: true,
+        logging: false,
+        width: width,
+        height: height,
+        windowWidth: width,
+        windowHeight: height,
+        scrollX: 0,
+        scrollY: -window.scrollY // Important to capture the whole content
+      });
+      
+      // Create PDF with proper dimensions
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+      
+      // Calculate dimensions
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      // Add pages if the content spans multiple pages
+      let heightLeft = imgHeight;
+      let position = 0;
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      
+      // Add new pages if needed
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      
+      // Save the PDF
+      pdf.save(`${resumeData.full_name || 'generated'}_resume.pdf`);
+      
+      // Restore original styles
+      resumeRef.current.style.cssText = originalStyle;
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert("Failed to download PDF. Please try again.");
     }
   };
 
-  const downloadResume = () => {
-    if (generatedResume) {
-      const element = document.createElement("a");
-      const file = new Blob([generatedResume], { type: "text/plain" });
-      element.href = URL.createObjectURL(file);
-      element.download = "generated-resume.md";
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
-    }
+  const handleResetForm = () => {
+    setResumeData(null);
   };
 
   const toggleAccordion = (section) => {
@@ -181,7 +211,7 @@ export default function Resume_generate() {
 
   return (
     <div className="resume-generator">
-      {!generatedResume ? (
+      {!resumeData ? (
         <form onSubmit={handleSubmit} className="resume-form">
           <div className="accordion">
             <div className="accordion-item">
@@ -363,24 +393,18 @@ Another project description."
           <div className="result-header">
             <h3>Generated Resume</h3>
             <div className="result-actions">
-              <button className="action-button" onClick={copyToClipboard}>
-                <Copy className="button-icon" />
-                Copy
-              </button>
-              <button className="action-button" onClick={downloadResume}>
-                <Download className="button-icon" />
-                Download
+              <button className="action-button" onClick={downloadAsPDF}>
+                <FileDown className="button-icon" />
+                Download PDF
               </button>
             </div>
           </div>
 
-          <div className="resume-card">
-            <div className="resume-content markdown-content">
-              {generatedResume}
-            </div>
+          <div className="resume-card" ref={resumeRef}>
+            <Resume data={resumeData} />
           </div>
 
-          <button className="reset-button" onClick={() => setGeneratedResume(null)}>
+          <button className="reset-button" onClick={handleResetForm}>
             Generate Another Resume
           </button>
         </div>

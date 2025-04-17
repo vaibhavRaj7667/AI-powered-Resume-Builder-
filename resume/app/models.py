@@ -14,6 +14,7 @@ class Resume(models.Model):
     
     def __str__(self):
         return f"{self.title} - {self.user.username}"
+        
 
 class ResumeAnalysis(models.Model):
     resume = models.OneToOneField(Resume, on_delete=models.CASCADE)

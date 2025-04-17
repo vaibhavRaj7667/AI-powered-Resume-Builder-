@@ -1,331 +1,165 @@
-import React, { useState, useRef } from 'react';
+// Updated Resume.jsx
+import React from 'react';
+import '../Css/Resume.css';
 
-export default function Resume() {
-  const resumeRef = useRef(null);
-
-  // Personal Information State
-  const [personalInfo, setPersonalInfo] = useState({
-    name: "Vaibhav Raj",
-    phone: "7667387499",
-    email: "email id",
-    linkedin: "linkedin",
-    github: "github"
-  });
-
-  // Education State
-  const [education, setEducation] = useState([
-    {
-      school: "Southwestern University",
-      location: "Georgetown, TX",
-      degree: "Bachelor of Arts in Computer Science, Minor in Business",
-      date: "Aug. 2018 – May 2021"
+const Resume = ({ data }) => {
+  // If data is not provided, use default data
+  const resumeData = data || {
+    full_name: 'Alex Johnson',
+    contact_info: [
+      'alex.johnson@example.com',
+      '(555) 123-4567',
+      'https://linkedin.com/in/alexjohnson',
+      'https://github.com/alexjohnson'
+    ],
+    summary: 'Results-driven Software Engineer with 3+ years of experience specializing in Python, Django, and React.js. Proven track record of delivering scalable web applications and optimizing system performance.',
+    skills: {
+      Languages: ['Python', 'JavaScript', 'TypeScript', 'HTML', 'CSS'],
+      Frameworks: ['Django', 'Django REST Framework', 'React.js', 'Flask'],
+      Developer_Tools: ['Git', 'Docker', 'AWS', 'Heroku', 'Jenkins'],
+      Databases: ['PostgreSQL', 'MongoDB', 'Redis'],
+      Testing: ['Jest', 'Pytest', 'Selenium']
     },
-    {
-      school: "Blinn College",
-      location: "Bryan, TX",
-      degree: "Associate's in Liberal Arts",
-      date: "Aug. 2014 – May 2018"
-    }
-  ]);
-
-  // Experience State
-  const [experiences, setExperiences] = useState([
-    {
-      title: "Undergraduate Research Assistant",
-      company: "Texas A&M University",
-      location: "College Station, TX",
-      date: "June 2020 – Present",
-      responsibilities: [
-        "Developed a REST API using FastAPI and PostgreSQL to store data from learning management systems",
-        "Developed a full-stack web application using Flask, React, PostgreSQL and Docker to analyze GitHub data",
-        "Explored ways to visualize GitHub collaboration in a classroom setting"
-      ]
-    },
-    {
-      title: "Information Technology Support Specialist",
-      company: "Southwestern University",
-      location: "Georgetown, TX",
-      date: "Sep. 2018 – Present",
-      responsibilities: [
-        "Communicate with managers to set up campus computers used on campus",
-        "Assess and troubleshoot computer problems brought by students, faculty and staff",
-        "Maintain upkeep of computers, classroom equipment, and 200 printers across campus"
-      ]
-    },
-    {
-      title: "Artificial Intelligence Research Assistant",
-      company: "Southwestern University",
-      location: "Georgetown, TX",
-      date: "May 2019 – July 2019",
-      responsibilities: [
-        "Explored methods to generate video game dungeons based off of The Legend of Zelda",
-        "Developed a game in Java to test the generated dungeons",
-        "Contributed 50K+ lines of code to an established codebase via Git",
-        "Conducted a human subject study to determine which video game dungeon generation technique is enjoyable",
-        "Wrote an 8-page paper and gave multiple presentations on-campus",
-        "Presented virtually to the World Conference on Computational Intelligence"
-      ]
-    }
-  ]);
-
-  // Projects State
-  const [projects, setProjects] = useState([
-    {
-      name: "Gitlytics",
-      technologies: "Python, Flask, React, PostgreSQL, Docker",
-      date: "June 2020 – Present",
-      details: [
-        "Developed a full-stack web application using with Flask serving a REST API with React as the frontend",
-        "Implemented GitHub OAuth to get data from user's repositories",
-        "Visualized GitHub data to show collaboration",
-        "Used Celery and Redis for asynchronous tasks"
-      ]
-    },
-    {
-      name: "Simple Paintball",
-      technologies: "Spigot API, Java, Maven, TravisCI, Git",
-      date: "May 2018 – May 2020",
-      details: [
-        "Developed a Minecraft server plugin to entertain kids during free time for a previous job",
-        "Published plugin to websites gaining 2K+ downloads and an average 4.5/5-star review",
-        "Implemented continuous delivery using TravisCI to build the plugin upon new a release",
-        "Collaborated with Minecraft server administrators to suggest features and get feedback about the plugin"
-      ]
-    }
-  ]);
-
-  // Skills State
-  const [skills, setSkills] = useState({
-    languages: "Python, C/C++, SQL (MySql), JavaScript, HTML/CSS",
-    frameworks: "Django",
-    tools: "Git and github",
-    libraries: "pandas, NumPy, Matplotlib"
-  });
-
-  // Function to handle printing resume
-  const handlePrint = () => {
-    const printWindow = window.open('', '_blank');
-    
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>${personalInfo.name} - Resume</title>
-          <style>
-            @page {
-              size: letter;
-              margin: 0.5in;
-            }
-            
-            body {
-              font-family: Arial, sans-serif;
-              font-size: 12px;
-              line-height: 1.4;
-              color: #000;
-              margin: 0;
-              padding: 0;
-            }
-            
-            .resume-container {
-              max-width: 100%;
-              margin: 0;
-              padding: 0;
-            }
-            
-            .header {
-              text-align: center;
-              margin-bottom: 16px;
-            }
-            
-            .header h1 {
-              font-size: 20px;
-              margin: 0 0 6px 0;
-              font-weight: bold;
-            }
-            
-            .contact-info {
-              font-size: 12px;
-              margin: 0;
-            }
-            
-            .section {
-              margin-bottom: 16px;
-            }
-            
-            .section-title {
-              font-size: 14px;
-              font-weight: bold;
-              margin: 0 0 8px 0;
-              border-bottom: 1px solid #000;
-              padding-bottom: 2px;
-            }
-            
-            .entry {
-              margin-bottom: 10px;
-            }
-            
-            .job-title {
-              font-weight: bold;
-              margin-bottom: 2px;
-            }
-            
-            .job-company-date {
-              display: flex;
-              justify-content: space-between;
-              margin-bottom: 2px;
-            }
-            
-            .job-company {
-              display: flex;
-            }
-            
-            .job-location {
-              color: #000;
-              margin-left: 6px;
-            }
-            
-            ul {
-              margin: 4px 0;
-              padding-left: 20px;
-            }
-            
-            li {
-              margin-bottom: 3px;
-              position: relative;
-            }
-            
-            li:before {
-              content: "•";
-              position: absolute;
-              left: -14px;
-            }
-            
-            .project-header {
-              display: flex;
-              justify-content: space-between;
-              font-weight: bold;
-              margin-bottom: 4px;
-            }
-            
-            .skill-label {
-              font-weight: bold;
-            }
-          </style>
-        </head>
-        <body>
-          ${resumeRef.current.innerHTML}
-        </body>
-      </html>
-    `);
-    
-    printWindow.document.close();
-    printWindow.focus();
-    setTimeout(() => {
-      printWindow.print();
-    }, 500);
+    experience: [
+      {
+        company: 'TechSolutions Inc.',
+        title: 'Software Engineer',
+        start_date: 'June 2021',
+        end_date: 'Present',
+        location: 'San Francisco, CA',
+        achievements: [
+          'Developed and maintained RESTful APIs using Django REST Framework, improving data retrieval speed by 40%.',
+          'Implemented CI/CD pipelines using GitHub Actions, reducing deployment time by 60%.',
+          'Optimized database queries, decreasing page load time by 35%.'
+        ]
+      },
+      {
+        company: 'InnovateTech',
+        title: 'Software Development Intern',
+        start_date: 'January 2021',
+        end_date: 'May 2021',
+        location: 'San Jose, CA',
+        achievements: [
+          'Collaborated with a team of 5 developers to create a customer management system.',
+          'Implemented front-end features using React.js, improving user engagement by 25%.'
+        ]
+      }
+    ],
+    education: [
+      {
+        institution: 'University of Technology',
+        degree: 'Bachelor of Science in Computer Science',
+        graduation_date: 'May 2021',
+        location: 'San Francisco, CA',
+        gpa: '3.8/4.0'
+      }
+    ],
+    projects: [
+      {
+        name: 'E-commerce Platform',
+        description: 'Built a full-stack e-commerce application with Django and React.js',
+        technologies: ['Django', 'React.js', 'PostgreSQL', 'AWS S3', 'Docker'],
+        link: 'https://github.com/alexjohnson/ecommerce-platform'
+      },
+      {
+        name: 'Task Management API',
+        description: 'Developed a RESTful API for task management using Django REST Framework',
+        technologies: ['Django REST Framework', 'JWT Authentication', 'PostgreSQL'],
+        link: 'https://github.com/alexjohnson/task-api'
+      }
+    ]
   };
 
+  // Format contact info to display properly
+  const contactInfo = resumeData.contact_info || [];
+
   return (
-    <div className="p-4 bg-gray-100 min-h-screen">
-      {/* Controls - will not be printed */}
-      <div className="max-w-3xl mx-auto mb-6 p-4 bg-white rounded shadow">
-        <h2 className="text-xl font-bold mb-4">Resume Controls</h2>
-        <button 
-          onClick={handlePrint}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Print Resume
-        </button>
-        <p className="mt-2 text-sm text-gray-600">
-          Note: You can edit the resume data in the code to create your own custom resume.
-        </p>
-      </div>
-      
-      {/* Resume Preview */}
-      <div className="max-w-3xl mx-auto bg-white shadow p-8">
-        <div className="resume-container" ref={resumeRef}>
-          {/* Header Section */}
-          <div className="header">
-            <h1>{personalInfo.name}</h1>
-            <div className="contact-info">
-              {personalInfo.phone} | {personalInfo.email} | {personalInfo.linkedin} | {personalInfo.github}
-            </div>
-          </div>
-
-          {/* Education Section */}
-          <div className="section">
-            <h2 className="section-title">Education</h2>
-            {education.map((edu, index) => (
-              <div key={index} className="entry">
-                <div className="flex justify-between">
-                  <div>
-                    <span className="font-bold">{edu.school}</span>
-                    <span className="ml-2">{edu.location}</span>
-                  </div>
-                  <span>{edu.date}</span>
-                </div>
-                <div>{edu.degree}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Experience Section */}
-          <div className="section">
-            <h2 className="section-title">Experience</h2>
-            {experiences.map((exp, index) => (
-              <div key={index} className="entry">
-                <div className="job-title">{exp.title}</div>
-                <div className="job-company-date">
-                  <div className="job-company">
-                    {exp.company}
-                    <span className="job-location">{exp.location}</span>
-                  </div>
-                  <div>{exp.date}</div>
-                </div>
-                <ul>
-                  {exp.responsibilities.map((resp, i) => (
-                    <li key={i}>{resp}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-
-          {/* Projects Section */}
-          <div className="section">
-            <h2 className="section-title">Projects</h2>
-            {projects.map((project, index) => (
-              <div key={index} className="entry">
-                <div className="project-header">
-                  <div>{project.name} | {project.technologies}</div>
-                  <div>{project.date}</div>
-                </div>
-                <ul>
-                  {project.details.map((detail, i) => (
-                    <li key={i}>{detail}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-
-          {/* Skills Section */}
-          <div className="section">
-            <h2 className="section-title">Technical Skills</h2>
-            <div>
-              <span className="skill-label">Languages:</span> {skills.languages}
-            </div>
-            <div>
-              <span className="skill-label">Frameworks:</span> {skills.frameworks}
-            </div>
-            <div>
-              <span className="skill-label">Developer Tools:</span> {skills.tools}
-            </div>
-            <div>
-              <span className="skill-label">Libraries:</span> {skills.libraries}
-            </div>
-          </div>
+    <div className="resume-container">
+      <header className="resume-header">
+        <h1>{resumeData.full_name}</h1>
+        <div className="contact-info">
+          {contactInfo.map((info, index) => (
+            <span key={index}>
+              {info}
+              {index < contactInfo.length - 1 && " | "}
+            </span>
+          ))}
         </div>
-      </div>
+      </header>
+
+      {resumeData.summary && (
+        <section className="resume-section">
+          <h2>Professional Summary</h2>
+          <p>{resumeData.summary}</p>
+        </section>
+      )}
+
+      <section className="resume-section">
+        <h2>Education</h2>
+        {resumeData.education && resumeData.education.map((edu, index) => (
+          <div key={index} className="education-item">
+            <div className="edu-header">
+              <div className="institution">{edu.institution}</div>
+              <div className="location">{edu.location}</div>
+            </div>
+            <div className="edu-details">
+              <div className="degree">{edu.degree}</div>
+              <div className="date">{edu.graduation_date}</div>
+              {edu.gpa && <div className="gpa">GPA: {edu.gpa}</div>}
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <section className="resume-section">
+        <h2>Experience</h2>
+        {resumeData.experience && resumeData.experience.map((exp, index) => (
+          <div key={index} className="experience-item">
+            <div className="exp-header">
+              <div className="job-title">{exp.title}</div>
+              <div className="date">{exp.start_date} - {exp.end_date}</div>
+            </div>
+            <div className="exp-subheader">
+              <div className="company">{exp.company}</div>
+              <div className="location">{exp.location}</div>
+            </div>
+            <ul className="achievements">
+              {exp.achievements && exp.achievements.map((achievement, i) => (
+                <li key={i}>{achievement}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </section>
+
+      <section className="resume-section">
+        <h2>Projects</h2>
+        {resumeData.projects && resumeData.projects.map((project, index) => (
+          <div key={index} className="project-item">
+            <div className="project-header">
+              <div className="project-name">{project.name}</div>
+              {project.link && <div className="project-link">{project.link}</div>}
+            </div>
+            <div className="project-details">
+              <p>{project.description}</p>
+              {project.technologies && <p>Technologies: {project.technologies.join(', ')}</p>}
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <section className="resume-section">
+        <h2>Technical Skills</h2>
+        <div className="skills-container">
+          {resumeData.skills && Object.entries(resumeData.skills).map(([category, skillList]) => (
+            <div key={category} className="skill-category">
+              <span className="skill-title">{category.replace('_', ' ')}:</span> {skillList.join(', ')}
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
-}
+};
+
+export default Resume;
