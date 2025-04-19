@@ -1,0 +1,92 @@
+/* Step Card Styles */
+.step-card {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid var(--gray-100);
+    position: relative;
+    width: 200px;
+    margin-right: 70px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.step-purple:hover {
+    border-color: var(--purple);
+}
+
+.step-teal:hover {
+    border-color: var(--teal);
+}
+
+.step-orange:hover {
+    border-color: var(--orange);
+}
+
+.step-pink:hover {
+    border-color: var(--pink);
+}
+
+.step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.number-purple {
+    background-color: rgba(147, 51, 234, 0.1);
+    color: var(--purple);
+}
+
+.number-teal {
+    background-color: rgba(20, 184, 166, 0.1);
+    color: var(--teal);
+}
+
+.number-orange {
+    background-color: rgba(249, 115, 22, 0.1);
+    color: var(--orange);
+}
+
+.number-pink {
+    background-color: rgba(236, 72, 153, 0.1);
+    color: var(--pink);
+}
+
+.step-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--gray-800);
+}
+
+.step-description {
+    color: var(--gray-600);
+}
+
+.step-arrow {
+    display: none;
+    position: absolute;
+    top: 3rem;
+    right: 0;
+    transform: translateX(50%);
+    color: var(--gray-300);
+}
+
+@media (min-width: 1024px) {
+    .step-arrow {
+        display: block;
+    }
+}

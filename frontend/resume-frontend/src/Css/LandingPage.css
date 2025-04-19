@@ -8,6 +8,7 @@ body {
 .main {
     position: relative;
     width: 100%;
+    background-color: #f6f6fc;
 }
 
 .nav {
@@ -161,6 +162,55 @@ button {
     background-color: #333;
     margin-bottom: 5px;
     border-radius: 2px;
+}
+
+.container {
+    padding: 30px;
+    background-color: rgb(255, 255, 255);
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.section-title {
+    font-family: "Matemasie", sans-serif;
+    font-size: 2.5rem;
+    margin-bottom: -10px;
+}
+
+.section-subtitle {
+    font-family: "Matemasie", sans-serif;
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.feature-card {
+    display: flex;
+
+}
+
+.step-container {
+    padding: 30px;
+    background-color: rgb(243, 243, 243);
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.steps-grid {
+    display: flex;
+    flex-direction: row;
+
+}
+
+.step-titles {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
 }
 
 @media screen and (max-width: 768px) {
