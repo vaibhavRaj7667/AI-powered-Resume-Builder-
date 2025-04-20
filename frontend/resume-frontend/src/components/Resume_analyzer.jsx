@@ -6,7 +6,7 @@ import '../Css/analyzer.css'
 import Button from '@mui/material/Button';
 import { LoadingButton } from '@mui/lab';
 import CircularProgress from '@mui/material/CircularProgress';
-
+import {Upload} from'lucide-react'
 
 
 
@@ -15,6 +15,22 @@ const Resume_analyzer = () => {
     const [resumeData, setResumeData] = useState({ pdf_file: '', job_description: '' })
     const [data, setData] = useState(null)
     const [Loading, setLoading] = useState(false)
+
+    const handelFileUploadButton = () => {
+        const el = document.createElement('input');
+        el.setAttribute('type', 'file');
+        el.setAttribute('accept', 'application/pdf');
+    
+        el.addEventListener('change', (ev) => {
+            if (el.files && el.files.length > 0) {
+                const file = el.files.item(0);
+                setResumeData(prev => ({ ...prev, pdf_file: file }));
+            }
+        });
+    
+        el.click();
+    };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault(); 
@@ -73,11 +89,21 @@ const Resume_analyzer = () => {
                 <div className='forms'>
                 <div className="resumeText">
                     <p>Resume Content</p>
-                    <input
+
+                    <div onClick={handelFileUploadButton} className="handeluploadbuttonclick">
+                        <Upload className='Upload'/>
+                        {resumeData.pdf_file && (
+                            <p className="text-sm text-green-600 mt-1">Uploaded: {resumeData.pdf_file.name}</p>
+                        )}
+
+                    </div>
+                    
+                    {/* <input
                         type="file"
                         accept="application/pdf"
                         onChange={(e) => setResumeData({ ...resumeData, pdf_file: e.target.files[0] })}
-                    />
+                        
+                    /> */}
                 </div>
 
                 <div className="jobDiscription">

@@ -82,6 +82,20 @@ textarea:focus {
     max-width: 100%;
 }
 
+.handeluploadbuttonclick {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 100%;
+
+    height: 79%;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 5px;
+}
+
+
 /* body {
     background-color: #f8f9fa;
 
