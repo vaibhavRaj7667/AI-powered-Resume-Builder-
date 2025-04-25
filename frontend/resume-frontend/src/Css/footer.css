@@ -1,0 +1,124 @@
+/* Footer Styles */
+.fcontainer {
+    color: rgb(189, 189, 189);
+    background-color: #3D365C;
+    padding: 20px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+.footer-brand {
+    margin-bottom: 2rem;
+}
+
+.footer-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: gra;
+    margin-bottom: 1rem;
+}
+
+.footer-description {
+    color: var(--gray-400);
+    margin-bottom: 1rem;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--gray-400);
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    transform: translateY(-3px);
+}
+
+.social-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.footer-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-link {
+    display: block;
+    padding: 0.5rem 0;
+    color: var(--gray-400);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: white;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 3rem;
+    padding-top: 2rem;
+    text-align: center;
+    color: var(--gray-400);
+}
+
+/* Colorful glow effects */
+.glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.15;
+}
+
+.glow-1 {
+    top: 0;
+    left: 25%;
+    width: 20rem;
+    height: 20rem;
+    background-color: var(--purple);
+}
+
+.glow-2 {
+    bottom: 0;
+    right: 25%;
+    width: 20rem;
+    height: 20rem;
+    background-color: var(--pink);
+}
+
+.glow-3 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 15rem;
+    height: 15rem;
+    background-color: var(--orange);
+}
+
+@media (min-width: 768px) {
+    .footer-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .footer-brand {
+        margin-bottom: 0;
+    }
+}

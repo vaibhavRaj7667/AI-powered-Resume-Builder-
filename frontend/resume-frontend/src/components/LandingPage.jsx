@@ -7,11 +7,14 @@ import '../Css/LandingPage.css'
 import FeatureCard from '../comp/FeatureCard'
 import StepCard from '../comp/StepCard'
 import { MessageSquare, CheckCircle, FileText, Download } from 'lucide-react';
+import { useNavigate } from 'react-router-dom'
+import Footer from '../comp/Footer'
 
 const LandingPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const featureRef = useRef(null)
   const howItsWorkRef = useRef(null)
+  const navigate = useNavigate()
 
   const scrollToSection = (ref) => {
     ref.current.scrollIntoView({ behavior: "smooth" })
@@ -127,7 +130,7 @@ const LandingPage = () => {
         </div>
 
         <div className={`rightbutton ${isMenuOpen ? 'active' : ''}`}>
-          <button className='signin'>Sign In</button>
+          <button className='signin' onClick={()=>navigate('/load')}>Sign In</button>
           <button className='get-start'>Get Started for free</button>
         </div>
       </div>
@@ -204,6 +207,10 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
+      <div>
+      <Footer/>
+      </div>
+    
     </div>
   )
 }
