@@ -1,11 +1,12 @@
 # resume_api/views.py
 from rest_framework import status
+from django.contrib.auth import logout
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 # from django.shortcuts import get_object_or_404
 from .models import Resume, ResumeAnalysis
-from .serializers import ResumeSerializer, ResumeAnalysisSerializer
+from .serializers import ResumeSerializer, ResumeAnalysisSerializer,SignupSerializer
 import re
 from .ai_services import ResumeAnalyzer
 # import json
@@ -110,6 +111,35 @@ def analyze_resume(request):
     })
 
 @api_view(['POST'])
+def improve_resume(request):
+    user_data = request.data.get('user_data', {})
+    query = request.data.get('query', '')
+
+    if not user_data or not query:
+        return Response(
+            {'error': 'user data and job query are required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    improved_content = analyzer.improve_generate_resume(user_data, query)
+
+    resume =Resume.objects.create(
+        user = request.user,
+        title = f"improved resume {Resume.objects.filter(user= request.user).count()+1}",
+        raw_content = improved_content,
+        optimized_content = improved_content,
+        job_description= query
+
+    )
+    print(type(resume.optimized_content))
+    return Response({
+        'resume': resume.optimized_content,
+        'generated': True
+    })
+     
+    
+
+@api_view(['POST'])
 def generate_resume(request):
     # Get user data and job description
     user_data = request.data.get('user_data', {})
@@ -137,3 +167,21 @@ def generate_resume(request):
         'resume': resume.optimized_content,
         'generated': True
     })
+
+@api_view(['POST'])
+def signup_view(request):
+    serializer = SignupSerializer(data = request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(status=status.HTTP_201_CREATED)
+
+   
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class Logout(APIView):
+
+    def post(self, request):
+        logout(request)
+        return Response(status=status.HTTP_202_ACCEPTED)

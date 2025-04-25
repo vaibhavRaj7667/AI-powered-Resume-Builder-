@@ -126,7 +126,7 @@ const Resume_analyzer = () => {
                     </Button>
                     ) : (
                     <Button 
-                        style={{backgroundColor:'gray', color:'white'}}
+                        style={{backgroundColor:'#3b82f6', color:'white'}}
                         variant="contained"
                         fullWidth
                         type='submit'

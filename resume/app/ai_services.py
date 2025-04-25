@@ -9,7 +9,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict
-
+from langchain_core.output_parsers import JsonOutputParser
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -90,6 +90,82 @@ class ResumeAnalyzer:
             
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
+        
+    def improve_generate_resume(self, user_data: dict, query: str)->dict:
+        
+        try:
+
+            prompt = ChatPromptTemplate.from_template("""
+                    ("system", "You are a professional resume writer and AI assistant specialized in creating ATS-optimized resumes and optmizing"),
+                    ("human", "from the given query or user_data below improved that only part of the resume section,
+                    
+                    Requirements:        
+                                                                    
+                    Do not invent or add any skills, projects, experiences, or details that are not present in the user data.
+                    Tailor and rephrase existing content to align with the job description, using relevant keywords and improving weak or generic sentences.
+                    Write a concise and impactful "About Me" section (2–3 lines) that reflects the user's actual skills, achievements, and projects.
+                    Use a clean, professional layout with clearly labeled sections: About Me, Experience, Projects, Skills, Education, etc.
+                    Use bullet points for clarity under each section.
+                    Skip any section if the user data does not contain relevant information.
+                    
+                    Format your output as a valid JSON object with the following structure:
+                    {{
+                        "full_name": "Candidate's full name",
+                        "contact_info": ["email", "phone", "linkedin", "github"],
+                        "summary": "Professional summary tailored to the job",
+                        "skills": {{
+                            "Languages": ["language1", "language2"],
+                            "Frameworks": ["framework1", "framework2"],
+                            "Developer_Tools": ["tool1", "tool2"],
+                            "Libraries": ["library1", "library2"]
+                        }},
+                        "experience": [
+                            {{
+                                "company": "Company name",
+                                "title": "Job title",
+                                "start_date": "Start date",
+                                "end_date": "End date or 'present'",
+                                "location": "Job location",
+                                "achievements": ["achievement1", "achievement2"]
+                            }}
+                        ],
+                        "education": [
+                            {{
+                                "institution": "Name of institution",
+                                "degree": "Degree obtained",
+                                "graduation_date": "Graduation date",
+                                "location": "Location",
+                                "gpa": "GPA if available"
+                            }}
+                        ],
+                        "projects": [
+                            {{
+                                "name": "Project name",
+                                "description": "Project description",
+                                "technologies": ["tech1", "tech2"],
+                                "link": "GitHub link",
+                                "live": "Live link"
+                            }}
+                        ]
+                    }}
+
+                    User Data:
+                    {user_data}
+
+                    user Query:
+                    {query}")
+                    """)
+
+            chain = prompt | self.llm | JsonOutputParser()
+                
+            result = chain.invoke({
+                "query": query,
+                "user_data": str(user_data)
+            })
+            
+            return {'status': 'success', 'content': result}
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
 
     def generate_resume(self, user_data: dict, job_description: str) -> dict:
         #"""Generate resume using Gemini"""
@@ -157,7 +233,7 @@ class ResumeAnalyzer:
         """)
             
 
-            from langchain_core.output_parsers import JsonOutputParser
+            # from langchain_core.output_parsers import JsonOutputParser
             
         
             chain = prompt | self.llm | JsonOutputParser()

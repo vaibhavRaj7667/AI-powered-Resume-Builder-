@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import '../Css/login.css'
+import stockimg from '../svg/stockimg.svg'
 
 const Login = () => {
 
@@ -40,14 +42,26 @@ const Login = () => {
 
 
   return (
-    <div>
-      <h1>this is login page </h1>
-        <div className='login'>
+    <div className='login-root'>
+      
+        <div className="login-card">
+
+            <div className="image-card2">
+            <img src={stockimg} alt="" />
+            </div>
+
+            <div className='login'>
             <input type="text" placeholder='username' value={credentials.username} onChange={(e)=>setcredentials({...credentials , username: e.target.value})}/>
 
             <input type="password" placeholder='password' value={credentials.password} onChange={(e)=>setcredentials({...credentials , password: e.target.value})}/>
 
-            <button onClick={HandelLogin}>Login</button>
+            <button className='login-button' onClick={HandelLogin}>Login</button>
+
+            
+
+            </div>
+
+
 
         </div>
 

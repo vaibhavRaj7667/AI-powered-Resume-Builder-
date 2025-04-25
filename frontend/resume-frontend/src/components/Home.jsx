@@ -3,16 +3,34 @@ import '../Css/Home.css';
 import Resume_analyzer from './Resume_analyzer';
 import Resume_generate from './Resume_generate';
 import { User, LogOut } from 'lucide-react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [resumeOption, setResumeOption] = useState('analyze');
   const [showDropdown, setShowDropdown] = useState(false);
-  
+  const navigate = useNavigate()
   const handleLogout = () => {
-    // Add your logout logic here
-    console.log("Logging out...");
-    // Example: redirect to login page
-    // window.location.href = '/login';
+    try {
+      axios.post('http://127.0.0.1:8000/logout/',
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+        }
+      )
+      .then((res)=>{
+        console.log(res.status)
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+      })
+     
+    } catch (error) {
+      console.log(error)
+    }
+    navigate('/')
+    
   };
 
   return (

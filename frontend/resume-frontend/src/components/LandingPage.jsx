@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import resume from '../svg/resume.svg'
 import { motion } from "framer-motion"
 // import Navbar from '../comp/Navbar'
@@ -6,10 +6,16 @@ import GradientText from '../comp/GradientText'
 import '../Css/LandingPage.css'
 import FeatureCard from '../comp/FeatureCard'
 import StepCard from '../comp/StepCard'
-import { MessageSquare,CheckCircle,FileText ,Download} from 'lucide-react';
-const LandingPage = () => {
+import { MessageSquare, CheckCircle, FileText, Download } from 'lucide-react';
 
+const LandingPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const featureRef = useRef(null)
+  const howItsWorkRef = useRef(null)
+
+  const scrollToSection = (ref) => {
+    ref.current.scrollIntoView({ behavior: "smooth" })
+  }
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -25,23 +31,22 @@ const LandingPage = () => {
     {
       title: "ATS Optimization",
       description: "Ensure your resume passes through Applicant Tracking Systems with our smart keyword analysis.",
-      icon:  <CheckCircle className="feature-icon" />,
+      icon: <CheckCircle className="feature-icon" />,
       color: "teal",
     },
     {
       title: "Beautiful Templates",
       description: "Choose from dozens of professionally designed templates that stand out.",
-      icon:  <FileText className="feature-icon" />,
+      icon: <FileText className="feature-icon" />,
       color: "orange",
     },
     {
       title: "Easy Export",
       description: "Download your resume in multiple formats including PDF, DOCX, and more.",
-      icon:  <Download className="feature-icon" />,
+      icon: <Download className="feature-icon" />,
       color: "pink",
     },
   ]
-
 
   const steps = [
     {
@@ -70,6 +75,21 @@ const LandingPage = () => {
     },
   ]
 
+  React.useEffect(() => {
+    const handleScroll = () => {
+      const nav = document.querySelector('.nav');
+      if (window.scrollY > 10) {
+        nav.classList.add('blurred');
+      } else {
+        nav.classList.remove('blurred');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
     <div className='main'>
@@ -82,9 +102,28 @@ const LandingPage = () => {
         </div>
 
         <div className={`leftbutton ${isMenuOpen ? 'active' : ''}`}>
-          <button>Features</button>
-          <button>How It Works</button>
-          <button>Testimonials</button>
+          <motion.button
+            style={{ borderRadius: "10px", padding: "5px 10px" }}
+            whileHover={{ boxShadow: "0px 3px 8px rgba(0, 0, 0, 0.24)" }}
+            onClick={() => scrollToSection(featureRef)}
+          >
+            Features
+          </motion.button>
+
+          <motion.button
+            style={{ borderRadius: "10px", padding: "5px 10px" }}
+            whileHover={{ boxShadow: "0px 3px 8px rgba(0, 0, 0, 0.24)" }}
+            onClick={() => scrollToSection(howItsWorkRef)}
+          >
+            How It Works
+          </motion.button>
+
+          <motion.button
+            style={{ borderRadius: "10px", padding: "5px 10px" }}
+            whileHover={{ boxShadow: "0px 3px 8px rgba(0, 0, 0, 0.24)" }}
+          >
+            Testimonials
+          </motion.button>
         </div>
 
         <div className={`rightbutton ${isMenuOpen ? 'active' : ''}`}>
@@ -94,87 +133,77 @@ const LandingPage = () => {
       </div>
 
       <div className="core">
-
-              <div className="leftdiv">
-                  <div className='leftdivchild'>
-                  <h1>
-                    Build Your <br/> 
-                    Perfect Resume <br/> 
-                    With{" "}
-                    <GradientText
-                      colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
-                      animationSpeed={7}
-                      showBorder={false}
-                      className="custom"
-                    >
-                      Ai
-                    </GradientText>
-                  </h1>
-                    <p>Get personalized suggestions, ATS optimization, and <br/>stunning templates in seconds.</p>
-                  </div>
-              </div>
-              <div className="rightdiv">
-
-                <div className="bro">
-               
-                <div className="lol">
-                    
-                    <div className="pinks"></div>
-                    <img src={resume} className='resume' alt="" />
-                    <div className="blue"></div>
-                </div>
-
-              </div>
-
-              </div>
-
+        <div className="leftdiv">
+          <motion.div className='leftdivchild'
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: 1, y: 5 }}
+            transition={{ delay: 0.2, duration: 0.7 }}
+          >
+            <h1>
+              Build Your <br />
+              Perfect Resume <br />
+              With{" "}
+              <GradientText
+                colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
+                animationSpeed={7}
+                showBorder={false}
+                className="custom"
+              >
+                Ai
+              </GradientText>
+            </h1>
+            <p>Get personalized suggestions, ATS optimization, and <br />stunning templates in seconds.</p>
+          </motion.div>
+        </div>
+        <div className="rightdiv">
+          <div className="bro">
+            <div className="lol">
+              <div className="pinks"></div>
+              <img src={resume} className='resume' alt="" />
+              <div className="blue"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="container">
-          
-                <h2 className="section-title">Powerful Features</h2>
-                <p className="section-subtitle">Everything you need to create a professional, ATS-optimized resume</p>
+      <div className="container" ref={featureRef}>
+        <h2 className="section-title">Powerful Features</h2>
+        <p className="section-subtitle">Everything you need to create a professional, ATS-optimized resume</p>
 
-                <div className="feature-card">
-                  {features.map((feature, index)=>(
-
-                    <FeatureCard
-                    key={index}
-                    title={feature.title}
-                    description={feature.description}
-                    icon={feature.icon}
-                    index={index}
-                    color={feature.color}
-                    />
-                  ))}
-
-                </div>
-
-          
+        <div className="feature-card">
+          {features.map((feature, index) => (
+            <FeatureCard
+              key={index}
+              title={feature.title}
+              description={feature.description}
+              icon={feature.icon}
+              index={index}
+              color={feature.color}
+            />
+          ))}
         </div>
-        <div className="step-container">
-            <div className="containers">
-            
-            <div className="step-titles">
+      </div>
+
+      <div className="step-container" ref={howItsWorkRef}>
+        <div className="containers">
+          <div className="step-titles">
             <h2 className="section-title">How It Works</h2>
             <p className="section-subtitle">Four simple steps to your perfect resume</p>
-
-            </div>
-              <div className="steps-grid">
-                {steps.map((step, index) => (
-                  <StepCard
-                    key={index}
-                    number={step.number}
-                    title={step.title}
-                    description={step.description}
-                    index={index}
-                    color={step.color}
-                  />
-                ))}
-              </div>
-            </div>
-              
+          </div>
+          <div className="steps-grid">
+            {steps.map((step, index) => (
+              <StepCard
+                key={index}
+                number={step.number}
+                title={step.title}
+                description={step.description}
+                index={index}
+                color={step.color}
+              />
+            ))}
+          </div>
         </div>
+      </div>
     </div>
   )
 }
