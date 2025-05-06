@@ -1,0 +1,138 @@
+.all {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    background-color: #f9fafb;
+}
+
+.leftSideBar {
+    margin-top: 80px;
+    height: 100%;
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+    width: 25%;
+
+}
+
+.personalinfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.262);
+
+}
+
+.pfp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+}
+
+.allbutton {
+    display: flex;
+    flex-direction: column;
+    /* Stack vertically */
+    gap: 10px;
+    /* Space between buttons */
+    align-items: flex-start;
+
+}
+
+.allbutton>button {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 10px 16px;
+    font-size: 16px;
+    cursor: pointer;
+
+    transition: background-color 0.8s ease, color 0.4s ease, border-color 0.4s ease;
+    border-radius: 6px;
+
+}
+
+.allbutton>button:hover {
+    background-color: rgb(182, 207, 207);
+}
+
+
+/* Dashboard */
+
+.rightContent {
+    height: 100%;
+    width: 70%;
+
+
+}
+
+.DashBar {
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+.dash-header {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 80px;
+
+}
+
+.dash-header h1 {
+    margin: 0;
+
+    font-size: 24px;
+
+}
+
+.dash-header button {
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+.dash-cards {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.dash-cards>p {
+    padding: 10px 90px;
+    font-size: larger;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.279);
+    border-radius: 10px;
+}
+
+.yourResume {
+    border: 1px solid rgba(0, 0, 0, 0.279);
+    border-radius: 10px;
+    padding: 20px;
+    background-color: white;
+}
+
+.resumecards {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid rgba(0, 0, 0, 0.279);
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
