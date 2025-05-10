@@ -9,7 +9,7 @@ class Resume(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     raw_content = models.TextField(blank=True)
-    optimized_content = models.TextField(blank=True)
+    optimized_content = models.JSONField(blank=True)
     job_description = models.TextField(blank=True)
     
     def __str__(self):
